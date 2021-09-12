@@ -14,6 +14,15 @@
 function removeDuplicates(sortedLinkedList) {
   // TODO: implement an algorithm to remove duplicate values from a 
   //sorted linked list.
+  let pointer = sortedLinkedList.head;
+
+  while (pointer !== null && pointer.next !== null) {
+    if (pointer.value === pointer.next.value) {
+      pointer.next = pointer.next.next;
+    } else {
+      pointer = pointer.next
+    }
+  }
 
   return sortedLinkedList;
 }
