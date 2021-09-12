@@ -35,7 +35,14 @@ class ParkingLot {
    * @param licensePlateNumber
    *  the license plate number of the car entering
    */
-  enter(licensePlateNumber) {}
+  enter(licensePlateNumber) {
+    if (this.vacantSpaces > 0) {
+      const space = this.spaces.indexOf('vacant');
+      this.spaces[space] = licensePlateNumber;
+    } else {
+      this.queue.enqueue(licensePlateNumber);
+    }
+  }
 
   /**
    * As a car leaves the parking lot, or the queue, 
@@ -44,7 +51,34 @@ class ParkingLot {
    * @param licensePlateNumber
    *    *  the license plate number of the car leaving.
    */
-  leave(licensePlateNumber) {}
+  leave(licensePlateNumber) {
+    //check if car left the lot;
+    if (this.spaces.includes(licensePlateNumber)) {
+      const lNum = this.spaces.indexOf(licensePlateNumber);
+      this.spaces[lNum] = 'vacant';
+      //increase revenue each time a car leaves
+      this.revenue += this.rate;
+
+      //move next in queue to vacant spot
+      if (!this.queue.isEmpty()) {
+        this.enter(this.queue.dequeue());
+      }
+      //check if car left the queue
+    } else {
+      if (!this.spaces.includes(licensePlateNumber)) {
+        let leftParkingQueue = new Queue;
+
+        while (!this.queue.isEmpty()) {
+          const left = this.queue.dequeue();
+
+          if(left !== licensePlateNumber){
+            leftParkingQueue.enqueue(left);
+          }
+        }
+        this.queue = leftParkingQueue;
+      }
+    }
+  }
 
   /**
    * Lists each space in the parking lot along with the license plate number 
